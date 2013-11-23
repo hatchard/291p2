@@ -19,18 +19,33 @@ def key_record(key, cur):
     Returns None if key does not exist.
     """
     # Change key from string to bytes
-    strkey = key.encode('utf-8')
-    data = cur.set(strkey)
+    bytes_key = key.encode('utf-8')
+    data = cur.set(bytes_key)
     if (data):
-        print("Number of records retrieved: 1   Time: ", "time goes here")
+        print("Number of records retrieved: 1")
         print(data)
+
+        # Open answers file.
+        answers = open('answers','a')
+        # Get the data portion of the <key,data> pair
+        strdata = data[1]
+        # Convert from bytes to a string.
+        strdata = strdata.decode('utf-8')
+        # Append to answers file.
+        answers.write(key)
+        answers.write('\n')
+        answers.write(strdata)
+        answers.write('\n')
+        answers.write('\n')
         return(data)
     else:
         print (key, "was not found.")
+        print ("Number of records retrieved: 0")
         return (None)
 
-def main ():
 
+
+def main ():
     # Check if there is an existing database
     try:
         print ("Openning existing database.")
@@ -87,6 +102,8 @@ def main ():
     key_record(key.decode('utf-8'), cur)
     print("Try to get a record from a key that does not exist:")
     key_record("abc", cur)
+
+    
 
     # Close the database
     try:
