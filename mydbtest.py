@@ -1,6 +1,8 @@
 # Create a b-tree database. Uses bsddb3 
 # DB_SIZE is set to 3 for testing purposes. Change to 100000 later.
 
+import sys
+
 from bsddb3 import db
 from ctypes import cdll
 lib = cdll.LoadLibrary('./libfoo.so')
@@ -44,16 +46,24 @@ def key_record(key, cur):
         return (None)
 
 def main ():
+    # gets the type from the arguements used to run the program
+    type = sys.argv
+
     # Check if there is an existing database
     try:
-        print ("Openning existing database.")
+        print ("Opening existing database.")
         DATABASE = db.DB()
         DATABASE.open("sample_db")
     except:
         DATABASE = db.DB()
         # Create a hash database 
         print ("Database doesn't exist. Creating a new one.")
-        DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
+        if type == BTREE:
+            DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
+            print("using BTREE")
+        elif type == HASH:
+            DATABASE.open("sample_db", None, db.DB_HASH, dn.DB_CREATE)
+            print("using Hashtable")
 
     # This is taken from python example shown in lab, with changes for python3
     # Add records to the database
