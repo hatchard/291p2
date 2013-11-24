@@ -43,8 +43,6 @@ def key_record(key, cur):
         print ("Number of records retrieved: 0")
         return (None)
 
-
-
 def main ():
     # Check if there is an existing database
     try:
@@ -103,15 +101,12 @@ def main ():
     print("Try to get a record from a key that does not exist:")
     key_record("abc", cur)
 
-    
-
     # Close the database
     try:
         cur.close()
         DATABASE.close()
     except Exception as e:
         print(e)
-
 
 if __name__ == "__main__":
     main()
