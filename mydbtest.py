@@ -56,7 +56,7 @@ def main ():
         DATABASE.open("sample_db")
     except:
         DATABASE = db.DB()
-        # Create a hash database 
+        # Create a database based on type 
         print ("Database doesn't exist. Creating a new one.")
         if type == BTREE:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
