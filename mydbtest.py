@@ -3,7 +3,9 @@
 
 import sys
 import easygui as eg
-from timeit import Timer
+import time
+
+import random # For testing purposes
 
 from bsddb3 import db
 from ctypes import cdll
@@ -17,38 +19,6 @@ SEED = 10000000
 database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
 DATABASE = None # Not sure if this needs to be here, but playing it safe for now
-
-def key_record(key, cur):
-    """
-    Retrieve a record with a given key.
-    Input key should be a string, which gets encoded to bytes.
-    Returns <key,data> pair is exists.
-    Returns None if key does not exist.
-    """
-    # Change key from string to bytes
-    bytes_key = key.encode('utf-8')
-    data = cur.set(bytes_key)
-    if (data):
-        print("Number of records retrieved: 1")
-        print(data)
-
-        # Open answers file.
-        answers = open('answers','a')
-        # Get the data portion of the <key,data> pair
-        strdata = data[1]
-        # Convert from bytes to a string.
-        strdata = strdata.decode('utf-8')
-        # Append to answers file.
-        answers.write(key)
-        answers.write('\n')
-        answers.write(strdata)
-        answers.write('\n')
-        answers.write('\n')
-        return(data)
-    else:
-        print (key, "was not found.")
-        print ("Number of records retrieved: 0")
-        return ("Key not found")
 
 def main ():
     # gets the type from the arguements used to run the program
@@ -186,9 +156,44 @@ def GuiRetrieveWithKey():
     if searchkey == None:
         eg.msgbox("Operation cancelled.")
         return
-    msg = key_record(searchkey, cur)
-    title = "Result"
-    eg.msgbox(msg, title)
+        
+    # >>>> Enable the following 2 lines for testing: <<<<<<
+    # searchkey = Testing(1)
+    # print (searchkey)
+    
+    # Change the key from string to bytes:
+    bytes_key = searchkey.encode('utf-8')
+
+    # Run the query, taking time before and after.
+    time_before = time.time()
+    data = cur.set(bytes_key)
+    time_after = time.time()
+
+    # Get time in microseconds
+    runtime = (time_after - time_before) * 100000
+    
+    # Results found
+    if (data):
+        # Open answers file.
+        answers = open('answers','a')
+        # Get the data portion of the <key,data> pair
+        strdata = data[1]
+        # Convert from bytes to a string.
+        strdata = strdata.decode('utf-8')
+        # Append to answers file.
+        answers.write(searchkey)
+        answers.write('\n')
+        answers.write(strdata)
+        answers.write('\n')
+        answers.write('\n')
+        text = ("Key input: \n{} \nData value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(searchkey, strdata, runtime))
+    # No results
+    else:
+        text = ("No results found for the following key: \n{} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(searchkey, runtime))
+
+    msg = "Results:" 
+    title = "Retrieve With Key"
+    eg.textbox(msg, title, text)
         
 
 def GuiRetrieveWithData():
@@ -208,6 +213,39 @@ def GuiDestroyDatabase():
     Destroy the database
     """
     pass
+
+def Testing(val_type):
+    """
+    Get a random key or data value from the database.
+    This is for testing the queries.
+    ** If you want a random key val_type = 1.
+    If you want a random data value val_type = 2.
+    """
+    # Get all pairs in database and add them to a list.
+    all_pairs = []
+    iter = cur.first()
+    while iter:
+        all_pairs.append(iter)
+        iter = cur.next()
+
+    # Get a random pair from the list.
+    index = random.randint(0, (len(all_pairs)-1))
+    random_pair = all_pairs[index]
+
+    # Get the key or data part.
+    if val_type == 1:
+        random_key = random_pair[0]
+        # Decode back to a string.
+        random_key = random_key.decode('utf-8')
+        return random_key
+    elif val_type == 2:
+        random_data = random_pair[1]
+        # Decode back to a string.
+        random_data = random_data.decode('utf-8')
+        return random_data
+    else:
+        # Should never be in here.
+        raise Exception ("Not a valid val_type input to Testing.")
 
 try:
     print ("Opening existing database.")
