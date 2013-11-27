@@ -3,6 +3,8 @@
 
 import sys
 
+from timeit import Timer
+
 from bsddb3 import db
 from ctypes import cdll
 lib = cdll.LoadLibrary('./libfoo.so')
@@ -94,22 +96,15 @@ def main ():
 
     # Create a cursor
     cur = DATABASE.cursor()
-    """
-    # Fetch all data from the database and print it (testing)
-    print (" ")
-    print ("Printing all data.")
-    iter = cur.first()
-    while iter:
-        print(iter)
-        iter = cur.next()
-    """
-    # Testing some functions here.
-    print(" >>>      TESTING      <<<")
-    print("Get a record from a given key:")
-    # Just used the last added key (as a string) here.
-    key_record(key.decode('utf-8'), cur)
-    print("Try to get a record from a key that does not exist:")
-    key_record("abc", cur)
+    
+    # Time the key_record function.
+    time = Timer(lambda: key_record(key.decode('utf-8'), cur)).timeit(number=1)
+    print("Time in microseconds: ", (time*100000))
+
+    print("\n")
+    print("Here is a key_record call that will fail: ")
+    time = Timer(lambda: key_record("notakey", cur)).timeit(number=1)
+    print("Time in microseconds: ", (time*1000000))
 
     # Close the database
     try:
@@ -120,4 +115,3 @@ def main ():
 
 if __name__ == "__main__":
     main()
-
