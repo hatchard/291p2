@@ -134,14 +134,14 @@ def GuiCreateDatabase():
         DATABASE = db.DB()
         # Create a database based on type 
         print ("Database doesn't exist. Creating a new one.")
-        if type[1] == "BTREE":
+        if "BTREE" in type:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
             print("using BTREE")
-        elif type[1] == "HASH":
+        elif "HASH" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, dn.DB_CREATE)
             print("using Hashtable")
         else:
-            eg.msgbox("Invalid type on execution, format should be python3 mydbtest.py BTREE")
+            eg.msgbox("Invalid type on execution, format should be python3 mydbtest.py BTREE/HASH")
             return
 
     # This is taken from python example shown in lab, with changes for python3
