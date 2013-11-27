@@ -1,0 +1,3 @@
+#!/bin/bash
+python3 mydbtest.py $1
+
