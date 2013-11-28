@@ -140,7 +140,49 @@ def GuiRetrieveWithData():
     """
     Retrieve records with a given data
     """
-    pass
+    msg = "Please enter the data you would like to search for"
+    title = "Retrieve key with given data"
+    searchdata = eg.enterbox(msg, title)
+
+    if searchdata == None:
+        eg.msgbox("Operation cancelled.")
+        return
+
+    # Change the data from string to bytes:
+    bytes_data = searchdata.encode('utf-8')
+
+    queryStr = ("CREATE INDEX data_index ON DATABASE (key)")
+    cur.execute(queryStr)
+    
+    time_before = time.time()
+    key = cur.set(bytes_data)
+    time_after = time.time()
+
+    # Get time in microseconds
+    runtime = (time_after - time_before) * 100000
+
+    # Results found
+    if (data):
+        # Open answers file.
+        answers = open('answers','a')
+        # Get the data portion of the <key,data> pair
+        strdata = key[1]
+        # Convert from bytes to a string.
+        strkey = strkey.decode('utf-8')
+        # Append to answers file.
+        answers.write(searchdata)
+        answers.write('\n')
+        answers.write(strkey)
+        answers.write('\n')
+        answers.write('\n')
+        text = ("Data input: \n{} \nKey value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(searchdata, strkey, runtime))
+    # No results
+    else:
+        text = ("No results found for the following data: \n{} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(searchdata, runtime))
+
+    msg = "Results:" 
+    title = "Retrieve With Data"
+    eg.textbox(msg, title, text)
 
 def GuiRetrieveWithRange():
     """
