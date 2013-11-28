@@ -108,7 +108,7 @@ def GuiCreateDatabase():
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
             print("using BTREE")
         elif "HASH" in type:
-            DATABASE.open("sample_db", None, db.DB_HASH, dn.DB_CREATE)
+            DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
             print("using Hashtable")
         else:
             eg.msgbox("Invalid type on execution, format should be python3 mydbtest.py BTREE/HASH")
