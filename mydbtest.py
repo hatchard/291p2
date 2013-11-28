@@ -98,8 +98,8 @@ def GuiRetrieveWithKey():
         return
         
     # >>>> Enable the following 2 lines for testing: <<<<<<
-    # searchkey = Testing(1)
-    # print (searchkey)
+    searchkey = Testing(1)
+    print (searchkey)
     
     # Change the key from string to bytes:
     bytes_key = searchkey.encode('utf-8')
@@ -115,7 +115,7 @@ def GuiRetrieveWithKey():
     # Results found
     if (data):
         # Open answers file.
-        answers = open('answers','a')
+        answers = open('answers','w')
         # Get the data portion of the <key,data> pair
         strdata = data[1]
         # Convert from bytes to a string.
@@ -202,6 +202,24 @@ def GuiRetrieveWithRange():
     """
     Retrieve records with a given range of key values
     """
+    msg = "Please enter the range search key values."
+    title = "Ranged Search"
+    fieldNames = ["Lower Bound", "Upper Bound"]
+    fieldValues = []
+    fieldValues = eg.multenterbox(msg, title, fieldNames)
+    if fieldValues == None:
+        eg.msgbox('Operation cancelled')
+        return
+
+    lowerKey = fieldValues[0]
+    upperKey = fieldValues[1]
+
+    # Check that lower key < upper key.
+    if upperKey <= lowerKey:
+        eg.msgbox("Error! Upper bound must be larger than lower bound.")
+        return
+
+    # Gui is done, but now queries.
     pass
 
 def GuiDestroyDatabase():
@@ -311,7 +329,3 @@ while True:
         DATABASE.close()
         sys.exit(0) # user chose Cancel
 
-"""
-if __name__ == "__main__":
-    main()
-"""
