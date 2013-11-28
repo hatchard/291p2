@@ -151,11 +151,13 @@ def GuiRetrieveWithData():
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
 
-    queryStr = ("CREATE INDEX data_index ON DATABASE (key)")
-    cur.execute(queryStr)
-    
+    SEC_INDEX = db.DB()
+    DATABASE.associate(SEC_INDEX, CreateSecIndex)
+
+    sec_cur = SEC_INDEX.cursor
+
     time_before = time.time()
-    key = cur.set(bytes_data)
+    key = sec_cur.set(bytes_data)
     time_after = time.time()
 
     # Get time in microseconds
@@ -183,6 +185,11 @@ def GuiRetrieveWithData():
     msg = "Results:" 
     title = "Retrieve With Data"
     eg.textbox(msg, title, text)
+
+def CreateSecIndex(SEC_DATABASE, key, data, new_key):
+    new_key = data
+    print(new_key)
+    return
 
 def GuiRetrieveWithRange():
     """
