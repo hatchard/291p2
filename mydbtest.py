@@ -20,6 +20,7 @@ database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
 DATABASE = None # Not sure if this needs to be here, but playing it safe for now
 
+"""
 def main ():
     # gets the type from the arguements used to run the program
     type = sys.argv
@@ -43,8 +44,7 @@ def main ():
     # This is taken from python example shown in lab, with changes for python3
     # Add records to the database
     lib.set_seed(SEED)
-    print(" ")
-    print("Printing <Key, Value> pairs.")
+    
     for index in range(DB_SIZE):
         krng = 64 + (lib.get_random() % 64)
         key = ""
@@ -54,8 +54,6 @@ def main ():
         value = ""
         for i in range(vrng):
             value = value + str(chr(lib.get_random_char()))
-        print("Key: ",key)
-        print("Value: ",value)
        
         # Change the string into bytes.
         key = key.encode('utf-8')
@@ -64,8 +62,7 @@ def main ():
         if (DATABASE.exists(key) == False):
             DATABASE.put(key,value)
         else:
-            print("This key is not unique. Pair was not added.")
-        print(" ")
+            print("This key is not unique.")
 
     # Create a cursor
     cur = DATABASE.cursor()
@@ -85,6 +82,7 @@ def main ():
         DATABASE.close()
     except Exception as e:
         print(e)
+"""
 
 def GuiCreateDatabase():
     """
@@ -106,10 +104,11 @@ def GuiCreateDatabase():
         print ("Database doesn't exist. Creating a new one.")
         if "BTREE" in type:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
-            print("using BTREE")
+            eg.msgbox("Btree database created.")
+
         elif "HASH" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, dn.DB_CREATE)
-            print("using Hashtable")
+            print("Hash table database created.")
         else:
             eg.msgbox("Invalid type on execution, format should be python3 mydbtest.py BTREE/HASH")
             return
@@ -117,8 +116,7 @@ def GuiCreateDatabase():
     # This is taken from python example shown in lab, with changes for python3
     # Add records to the database
     lib.set_seed(SEED)
-    print(" ")
-    print("Printing <Key, Value> pairs.")
+
     for index in range(DB_SIZE):
         krng = 64 + (lib.get_random() % 64)
         key = ""
@@ -138,17 +136,14 @@ def GuiCreateDatabase():
         if (DATABASE.exists(key) == False):
             DATABASE.put(key,value)
         else:
-            print("This key is not unique. Pair was not added.")
-        print(" ")
+            print(key.decode('utf-8'), "cannot be added as it is a duplicate.")
 
     # Create a cursor
     return DATABASE.cursor()
 
 def GuiRetrieveWithKey():
     """
-    Retrieve records with a given key. This could be integrated into the
-    record_key function, but I wanted to make sure the main() code still
-    ran, so we can do a renaming later if we want.
+    Retrieve records with a given key.
     """
     msg = "Please enter the key you wish to search for"
     title = "Retrieve data with given key"
@@ -212,7 +207,19 @@ def GuiDestroyDatabase():
     """
     Destroy the database
     """
-    pass
+    # Close the existing database handle.
+    DATABASE.close()
+
+    # Open a new database handle and drop the database.
+    db_destroy = db.DB()
+    try:
+        db_destroy.remove("sample_db")
+        eg.msgbox("Database was successfully dropped.")
+        db_destroy.close()
+    except Exception as e:
+        eg.msgbox(e)
+
+    return
 
 def Testing(val_type):
     """
@@ -248,7 +255,6 @@ def Testing(val_type):
         raise Exception ("Not a valid val_type input to Testing.")
 
 try:
-    print ("Opening existing database.")
     DATABASE = db.DB()
     DATABASE.open("sample_db")
     eg.msgbox("Existing database found, opening existing database")
@@ -257,7 +263,8 @@ try:
 except:
     eg.msgbox("No existing database found. Be sure to create a new one.")
     database_exists = False
-    
+
+
 while True:
     msg = "CMPUT 291 Project 2, by Victoria Bobey, Sarah Morris, and Eldon Lake"
     title = "mydbtest"
@@ -291,6 +298,7 @@ while True:
     elif choice == choices[4]:
         if database_exists:
             GuiDestroyDatabase()
+            database_exists = False
         else:
             eg.msgbox("Error! Must create database first.")
 
@@ -299,8 +307,10 @@ while True:
     if eg.ccbox(msg, title, ('Continue', 'Exit')): # Continue/Cancel dialog
         pass # user chose Continue
     else:
-        con.close()
+        DATABASE.close()
         sys.exit(0) # user chose Cancel
 
+"""
 if __name__ == "__main__":
     main()
+"""
