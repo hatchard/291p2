@@ -20,70 +20,6 @@ database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
 DATABASE = None # Not sure if this needs to be here, but playing it safe for now
 
-"""
-def main ():
-    # gets the type from the arguements used to run the program
-    type = sys.argv
-
-    # Check if there is an existing database
-    try:
-        print ("Opening existing database.")
-        DATABASE = db.DB()
-        DATABASE.open("sample_db")
-    except:
-        DATABASE = db.DB()
-        # Create a database based on type 
-        print ("Database doesn't exist. Creating a new one.")
-        if type == BTREE:
-            DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
-            print("using BTREE")
-        elif type == HASH:
-            DATABASE.open("sample_db", None, db.DB_HASH, dn.DB_CREATE)
-            print("using Hashtable")
-
-    # This is taken from python example shown in lab, with changes for python3
-    # Add records to the database
-    lib.set_seed(SEED)
-    
-    for index in range(DB_SIZE):
-        krng = 64 + (lib.get_random() % 64)
-        key = ""
-        for i in range(krng):
-            key = key + str(chr(lib.get_random_char()))
-        vrng = 64 + (lib.get_random() % 64)
-        value = ""
-        for i in range(vrng):
-            value = value + str(chr(lib.get_random_char()))
-       
-        # Change the string into bytes.
-        key = key.encode('utf-8')
-        value = value.encode('utf-8')
-        # Add key,value pair to database only if key is unique.
-        if (DATABASE.exists(key) == False):
-            DATABASE.put(key,value)
-        else:
-            print("This key is not unique.")
-
-    # Create a cursor
-    cur = DATABASE.cursor()
-    
-    # Time the key_record function.
-    time = Timer(lambda: key_record(key.decode('utf-8'), cur)).timeit(number=1)
-    print("Time in microseconds: ", (time*100000))
-
-    print("\n")
-    print("Here is a key_record call that will fail: ")
-    time = Timer(lambda: key_record("notakey", cur)).timeit(number=1)
-    print("Time in microseconds: ", (time*1000000))
-
-    # Close the database
-    try:
-        cur.close()
-        DATABASE.close()
-    except Exception as e:
-        print(e)
-"""
-
 def GuiCreateDatabase():
     """
     Creates and populates the database
@@ -117,7 +53,9 @@ def GuiCreateDatabase():
     # Add records to the database
     lib.set_seed(SEED)
 
-    for index in range(DB_SIZE):
+    #for index in range(DB_SIZE):
+    index = 1
+    while index <= DB_SIZE:
         krng = 64 + (lib.get_random() % 64)
         key = ""
         for i in range(krng):
@@ -126,8 +64,6 @@ def GuiCreateDatabase():
         value = ""
         for i in range(vrng):
             value = value + str(chr(lib.get_random_char()))
-        print("Key: ",key)
-        print("Value: ",value)
        
         # Change the string into bytes.
         key = key.encode('utf-8')
@@ -136,7 +72,16 @@ def GuiCreateDatabase():
         if (DATABASE.exists(key) == False):
             DATABASE.put(key,value)
         else:
-            print(key.decode('utf-8'), "cannot be added as it is a duplicate.")
+            while (DATABASE.exists(key) == True):
+                print(key.decode('utf-8'), "cannot be added as it is a duplicate.")
+                krng = 64 + (lib.get_random() % 64)
+                key = ""
+                for i in range(krng):
+                    key = key + str(chr(lib.get_random_char()))
+                key = key.encode('utf-8')
+            DATABASE.put(key,value)
+        index = index + 1
+        
 
     # Create a cursor
     return DATABASE.cursor()
