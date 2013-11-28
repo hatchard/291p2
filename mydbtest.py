@@ -155,6 +155,13 @@ def GuiRetrieveWithData():
     cur.execute(queryStr)
     
     time_before = time.time()
+    """
+    This is where you would put the query to time it.
+    You don't want key = cur.set() because that is for getting the data value
+    associated with the given key.
+    This is saying the key = bytes_data. Now find this key and return the data
+    value associated with it.
+    """
     key = cur.set(bytes_data)
     time_after = time.time()
 
