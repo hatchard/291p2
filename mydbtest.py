@@ -20,6 +20,56 @@ database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
 DATABASE = None # Not sure if this needs to be here, but playing it safe for now
 
+def GuiIndexData():
+    """
+    Retrieve records with a given data
+    """
+    msg = "Please enter the data you would like to search for"
+    title = "Retrieve key with given data"
+    searchdata = eg.enterbox(msg, title)
+
+    if searchdata == None:
+        eg.msgbox("Operation cancelled.")
+        return
+
+    # Change the data from string to bytes:
+    bytes_data = searchdata.encode('utf-8')
+
+    time_before = time.time()
+    key = sec_cur.set(bytes_data)
+    """
+    This is where you would put the query to time it.
+    You don't want key = cur.set() because that is for getting the data value
+    associated with the given key.
+    This is saying the key = bytes_data. Now find this key and return the data
+    value associated with it.
+    """
+    time_after = time.time()
+
+    # Get time in microseconds
+    runtime = (time_after - time_before) * 100000
+
+    # Results found
+    if (key):
+        # Append to answers file.
+        answers.write(key[1].decode('utf-8'))
+        answers.write('\n')
+        answers.write(key[0].decode('utf-8'))
+        answers.write('\n')
+        answers.write('\n')
+        text = ("Data input: \n{} \nKey value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(key[1].decode('utf-8'), key[0].decode('utf-8'), runtime))
+    # No results
+    else:
+        text = ("No results found for the following data: \n{} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(searchdata, runtime))
+
+    msg = "Results:"
+    title = "Retrieve With Data"
+    eg.textbox(msg, title, text)
+
+def CreateSecIndex(SEC_DATABASE, key, data, new_key):
+    new_key = data
+    print(new_key)
+    return
 
 def GuiCreateDatabase():
     """
@@ -39,10 +89,15 @@ def GuiCreateDatabase():
         # Create a database based on type 
         DATABASE = db.DB()
         print ("Database doesn't exist. Creating a new one.")
-        if "BTREE" in type or "btree" in type:
+        if "BTREE" in type or "btree" in type or "indexfile" in type:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
-            print("btree database created")
-            eg.msgbox("Btree database created.")
+            if "indexfile" in type:
+                SEC_DB = db.DB()
+                SEC_DB.open("indexfile", None, db.DB_BTREE, db.DB_CREATE)
+                eg.msgbox("Indexed Database created.")
+            else:
+                print("btree database created")
+                eg.msgbox("Btree database created.")
         elif "HASH" in type or "hash" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
             eg.msgbox("Hashtable database created.")
@@ -72,6 +127,8 @@ def GuiCreateDatabase():
         # Add key,value pair to database only if key is unique.
         if (DATABASE.exists(key) == False):
             DATABASE.put(key,value)
+            if "indexfile" in type:
+                SEC_DB.put(value, key)
         else:
             while (DATABASE.exists(key) == True):
                 print(key.decode('utf-8'), "cannot be added as it is a duplicate.")
@@ -80,9 +137,12 @@ def GuiCreateDatabase():
                 for i in range(krng):
                     key = key + str(chr(lib.get_random_char()))
                 key = key.encode('utf-8')
+            if "indexfile" in type:
+                SEC_DB.put(value, key)
             DATABASE.put(key,value)
         index = index + 1
     print("len database: ", len(DATABASE))
+    SEC_DB.close()
     DATABASE.close()
     return
 
@@ -397,6 +457,13 @@ except:
     eg.msgbox("No existing database found. Be sure to create a new one.")
     database_exists = False
 
+try:
+    SEC_DB = db.DB()
+    SEC_DB.open("indexfile")
+    sec_cur = SEC_DB.cursor()
+except:
+    pass
+
 
 while True:
     # Open answers file.
@@ -408,7 +475,8 @@ while True:
                "Retrieve records with a given data",
                "Retrieve records wtih a given range of key values",
                "Destroy the database",
-               "Grab a random key for testing"]
+               "Grab a random key for testing",
+               "Index data search"]
     choice = eg.choicebox(msg, title, choices)
     if choice == choices[0]:
         if not database_exists:
@@ -417,9 +485,11 @@ while True:
             DATABASE = db.DB()
             DATABASE.open("sample_db")
             cur = DATABASE.cursor()
-            #print("len database: ", len(DATABASE))
+            if "indexfile" in sys.argv:
+                SEC_DB = db.DB()
+                SEC_DB.open("indexfile")
+                sec_cur = SEC_DB.cursor()
             database_exists = True
-            #print("len database: ", len(DATABASE))
         else:
             eg.msgbox("Database already exists. Destroy the old database before attempting to create a new one.")
     elif choice == choices[1]:
@@ -448,6 +518,8 @@ while True:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[5]:
         eg.textbox("Key: ", "Random Key", Testing(1))
+    elif choice == choices[6]:
+        GuiIndexData()
 
     msg = "Do you want to continue?"
     title = "Continue?"
