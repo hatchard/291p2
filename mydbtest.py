@@ -406,7 +406,7 @@ def GuiDestroyDatabase():
         eg.msgbox("Database was successfully dropped.")
         db_destroy.close()
     except Exception as e:
-        eg.msgbox(e)
+        eg.msgbox("Database has already been dropped")
 
     return
 
