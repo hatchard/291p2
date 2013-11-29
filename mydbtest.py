@@ -173,9 +173,6 @@ def GuiHashRange():
     while i < len(DATABASE):
         if lowbyte_key <= current[0] <= upperbyte_key:
             resultlist.append((current[0], current[1]))
-        print(current[0])
-        print(current[1])
-        print('\n')
         current = cur.next()
         i += 1
     time_after = time.time()
@@ -185,13 +182,17 @@ def GuiHashRange():
     # Results found
     if (resultlist):
         for item in resultlist:
-            print(item)
+            answers.write(item[0].decode('utf-8'))
+            answers.write('\n')
+            answers.write(item[1].decode('utf-8'))
+            answers.write('\n')
+            answers.write('\n')
     else:
         text = ("No results found for the following key range:\n{}\n{}\nTime: {} microseconds".format(lowerKey, upperKey, runtime))
 
     msg = "Results:" 
     title = "Retrieve With Key"
-    eg.textbox(msg, title, "Number of records: {}".format(len(resultlist)))
+    eg.textbox(msg, title, "Number of records: {} in {} microseconds\n{}".format(len(resultlist), runtime, resultlist))
         
 
 def GuiRetrieveWithData():
@@ -310,9 +311,11 @@ def GuiRetrieveWithRange():
         tempKey = tempKey.decode('utf-8')
         tempData = tempData.decode('utf-8')
         # Create a list to hold all keys found by range search
-        rangeResults = [(tempKey, tempData)]
+        rangeResults = []
         # Continue getting keys until 1 is larger than the upperKey.
         while tempKey <= upperKey:
+            # Add to results
+            rangeResults.append((tempKey, tempData))
             # Append to answers file.
             answers.write(tempKey)
             answers.write('\n')
@@ -325,7 +328,7 @@ def GuiRetrieveWithRange():
             tempData = tempPair[1]
             tempKey = tempKey.decode('utf-8')
             tempData = tempData.decode('utf-8')
-            rangeResults.append((tempKey, tempData))
+            
         time_after = time.time()
         # Get the runtime in microseconds
         runtime = (time_after - time_before) * 100000
