@@ -33,7 +33,7 @@ def GuiIndexData():
         return
 
     # >>> TESTING <<<
-    searchdata = Testing(2)
+    #searchdata = Testing(2)
 
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
@@ -43,7 +43,7 @@ def GuiIndexData():
     time_after = time.time()
 
     # Get time in microseconds
-    runtime = (time_after - time_before) * 100000
+    runtime = (time_after - time_before) * 1000000
 
     # Results found
     if (key):
@@ -163,7 +163,7 @@ def GuiRetrieveWithKey():
     time_after = time.time()
 
     # Get time in microseconds
-    runtime = (time_after - time_before) * 100000
+    runtime = (time_after - time_before) * 1000000
     
     # Results found
     if (data):
@@ -228,7 +228,7 @@ def GuiHashRange():
 
     time_after = time.time()
     # Get time in microseconds
-    runtime = (time_after - time_before) * 100000
+    runtime = (time_after - time_before) * 1000000
     
     # Results found
     if (resultlist):
@@ -259,7 +259,7 @@ def GuiRetrieveWithData():
         return
 
     # >>>>> TESTING <<<<
-    searchdata = Testing(2)
+    #searchdata = Testing(2)
 
 
     # Change the data from string to bytes:
@@ -285,7 +285,7 @@ def GuiRetrieveWithData():
     time_after = time.time()
 
     # Get time in microseconds
-    runtime = (time_after - time_before) * 100000
+    runtime = (time_after - time_before) * 1000000
 
     # Results found
     if (key):
@@ -330,13 +330,12 @@ def GuiRetrieveWithRange():
         eg.msgbox("Error! Upper bound must be larger than lower bound.")
         return
 
-    # >>> TESTING <<<<
-     
-    lowerKey = Testing(1)
-    upperKey = Testing(1)
-    while upperKey <= lowerKey:
-        upperKey = Testing(1)
-        lowerkey = Testing(1)
+    # >>> TESTING <<<<   
+    #lowerKey = Testing(1)
+    #upperKey = Testing(1)
+    #while upperKey <= lowerKey:
+    #    upperKey = Testing(1)
+    #    lowerkey = Testing(1)
     
 
     print("Lower Key: ",lowerKey)
@@ -350,7 +349,7 @@ def GuiRetrieveWithRange():
     if (tempPair == None):
         time_after = time.time()
         # Get the runtime in microseconds
-        runtime = (time_after - time_before) * 100000
+        runtime = (time_after - time_before) * 1000000
         text = ("No results found in the following range: \nLower Bound: {}  \nUpper Bound: {} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(lowerKey, upperKey, runtime))
     else:
         tempKey = tempPair[0]
@@ -378,7 +377,7 @@ def GuiRetrieveWithRange():
             
         time_after = time.time()
         # Get the runtime in microseconds
-        runtime = (time_after - time_before) * 100000
+        runtime = (time_after - time_before) * 1000000
         numResults = len(rangeResults)
         text = ("Data input: \nLower Bound: {} \nUpper Bound: {} \nNumber of records retrieved: {} \nTime: {} microseconds \nRecords found: \n{}".format(lowerKey, upperKey, numResults, runtime, rangeResults))
 
@@ -494,15 +493,15 @@ while True:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[2]:
         if database_exists:
-            if "indexfile" in sys.argv:
+            if "indexfile" in sys.argv or "IndexFile" in sys.argv:
                 GuiIndexData()
             else:
-                GuiRetrieveWithData()
+                GuiRetrieveWithData() 
         else:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[3]:
         if database_exists:
-            if "HASH" in sys.argv:
+            if "HASH" in sys.argv or "hash" in sys.argv:
                 GuiHashRange()
             else:
                 GuiRetrieveWithRange()
