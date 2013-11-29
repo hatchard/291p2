@@ -62,11 +62,6 @@ def GuiIndexData():
     title = "Retrieve With Data"
     eg.textbox(msg, title, text)
 
-def CreateSecIndex(SEC_DATABASE, key, data, new_key):
-    new_key = data
-    print(new_key)
-    return
-
 def GuiCreateDatabase():
     """
     Creates and populates the database
@@ -279,7 +274,7 @@ def GuiRetrieveWithData():
     while data != bytes_data and i < len(DATABASE):
         next_record = cur.next()
         data = next_record[1]
-        #print("i: ", i)
+
         i += 1
 
     if data == bytes_data:
