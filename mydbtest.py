@@ -272,7 +272,6 @@ def GuiRetrieveWithData():
     while data != bytes_data and i < len(DATABASE):
         next_record = cur.next()
         data = next_record[1]
-        print("i: ", i)
         i += 1
 
     if data == bytes_data:
