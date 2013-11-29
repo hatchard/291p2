@@ -133,6 +133,7 @@ Time: 311798863.17253113 microseconds.
 
 HASH Range Search Results:
 Time: 157585918.49803925 microseconds.
+Time: 156251532.00626373 microseconds.
 
 Index Data Search Results:
 25.272369384765625 
