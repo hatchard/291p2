@@ -138,9 +138,6 @@ def GuiHashRange():
     Retrieve records with a given range when database type is hash.
     Just a proof of concept, doesn't return anything readable or write to the
     answer file yet, but it does work.
-
-    CURRENTLY RETURNS ONE FEWER MATCH THAN THE BTREE ONE, NOT SURE IF THIS
-    IS AN ERROR HERE OR IN THE BTREE IMPLEMENTATION.
     """
     # Take input values
     msg = "Please enter the range search key values."
@@ -298,7 +295,6 @@ def GuiRetrieveWithRange():
     # Get the next key that is greater than lowerKey or equal to it.
     # cur.set_range returns the key,data pair. Key is at 0th index.
     tempPair = (cur.set_range(lowerKey.encode('utf-8')))
-    print("tempPair: ", tempPair)
     # Check if there are no results
     if (tempPair == None):
         time_after = time.time()
@@ -451,7 +447,7 @@ while True:
         else:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[5]:
-        print("Key: " + Testing(1))
+        eg.textbox("Key: ", "Random Key", Testing(1))
 
     msg = "Do you want to continue?"
     title = "Continue?"
