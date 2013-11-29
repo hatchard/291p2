@@ -20,6 +20,7 @@ database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
 DATABASE = None # Not sure if this needs to be here, but playing it safe for now
 
+
 def GuiCreateDatabase():
     """
     Creates and populates the database
@@ -81,9 +82,9 @@ def GuiCreateDatabase():
                 key = key.encode('utf-8')
             DATABASE.put(key,value)
         index = index + 1
-  
-    # Create a cursor
-    return DATABASE.cursor()
+    print("len database: ", len(DATABASE))
+    DATABASE.close()
+    return
 
 def GuiRetrieveWithKey():
     """
@@ -97,8 +98,8 @@ def GuiRetrieveWithKey():
         return
         
     # >>>> Enable the following 2 lines for testing: <<<<<<
-    searchkey = Testing(1)
-    print (searchkey)
+    #searchkey = Testing(1)
+    #print (searchkey)
     
     # Change the key from string to bytes:
     bytes_key = searchkey.encode('utf-8')
@@ -132,6 +133,66 @@ def GuiRetrieveWithKey():
     title = "Retrieve With Key"
     eg.textbox(msg, title, text)
         
+def GuiHashRange():
+    """
+    Retrieve records with a given range when database type is hash.
+    Just a proof of concept, doesn't return anything readable or write to the
+    answer file yet, but it does work.
+
+    CURRENTLY RETURNS ONE FEWER MATCH THAN THE BTREE ONE, NOT SURE IF THIS
+    IS AN ERROR HERE OR IN THE BTREE IMPLEMENTATION.
+    """
+    # Take input values
+    msg = "Please enter the range search key values."
+    title = "Ranged Search"
+    fieldNames = ["Lower Bound", "Upper Bound"]
+    fieldValues = []
+    fieldValues = eg.multenterbox(msg, title, fieldNames)
+    if fieldValues == None:
+        eg.msgbox('Operation cancelled')
+        return
+
+    lowerKey = fieldValues[0]
+    upperKey = fieldValues[1]
+
+    # Check that lower key < upper key.
+    if upperKey <= lowerKey:
+        eg.msgbox("Error! Upper bound must be larger than lower bound.")
+        return
+        
+    # Change the key from string to bytes:
+    lowbyte_key = lowerKey.encode('utf-8')
+    upperbyte_key = upperKey.encode('utf-8')
+
+    current = cur.first()
+
+    # Iterate through the database, taking time before and after
+    resultlist = []
+    i = 0
+    time_before = time.time()
+    while i < len(DATABASE):
+        if lowbyte_key <= current[0] <= upperbyte_key:
+            resultlist.append((current[0], current[1]))
+        print(current[0])
+        print(current[1])
+        print('\n')
+        current = cur.next()
+        i += 1
+    time_after = time.time()
+    # Get time in microseconds
+    runtime = (time_after - time_before) * 100000
+    
+    # Results found
+    if (resultlist):
+        for item in resultlist:
+            print(item)
+    else:
+        text = ("No results found for the following key range:\n{}\n{}\nTime: {} microseconds".format(lowerKey, upperKey, runtime))
+
+    msg = "Results:" 
+    title = "Retrieve With Key"
+    eg.textbox(msg, title, "Number of records: {}".format(len(resultlist)))
+        
 
 def GuiRetrieveWithData():
     """
@@ -150,22 +211,22 @@ def GuiRetrieveWithData():
 
     time_before = time.time()
     
-    print("data looking for: ", bytes_data)
+    #print("data looking for: ", bytes_data)
     
     first = cur.first()
 
     data = first[1]
 
-    print("first data: ", data)
-    print("len database: ", len(DATABASE))
+    #print("first data: ", data)
+    #print("len database: ", len(DATABASE))
 
     i = 1 
     while data != bytes_data and i < len(DATABASE):
         next_record = cur.next()
         data = next_record[1]
-        print("data: ", data)
+        #print("data: ", data)
         i += 1
-        print("i: ", i)
+        #print("i: ", i)
 
     if data == bytes_data:
         key = next_record[0]
@@ -347,14 +408,19 @@ while True:
                "Retrieve records with a given key",
                "Retrieve records with a given data",
                "Retrieve records wtih a given range of key values",
-               "Destroy the database"]
+               "Destroy the database",
+               "Grab a random key for testing"]
     choice = eg.choicebox(msg, title, choices)
     if choice == choices[0]:
         if not database_exists:
-            cur = GuiCreateDatabase()
-            print("len database: ", len(DATABASE))
+            GuiCreateDatabase()
+            # These lines moved here because python scoping was misbehaving
+            DATABASE = db.DB()
+            DATABASE.open("sample_db")
+            cur = DATABASE.cursor()
+            #print("len database: ", len(DATABASE))
             database_exists = True
-            print("len database: ", len(DATABASE))
+            #print("len database: ", len(DATABASE))
         else:
             eg.msgbox("Database already exists. Destroy the old database before attempting to create a new one.")
     elif choice == choices[1]:
@@ -369,7 +435,10 @@ while True:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[3]:
         if database_exists:
-            GuiRetrieveWithRange()
+            if "HASH" in sys.argv:
+                GuiHashRange()
+            else:
+                GuiRetrieveWithRange()
         else:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[4]:
@@ -378,12 +447,14 @@ while True:
             database_exists = False
         else:
             eg.msgbox("Error! Must create database first.")
+    elif choice == choices[5]:
+        print("Key: " + Testing(1))
 
     msg = "Do you want to continue?"
     title = "Continue?"
     if eg.ccbox(msg, title, ('Continue', 'Exit')): # Continue/Cancel dialog
         pass # user chose Continue
     else:
-        DATABASE.close()
+        GuiDestroyDatabase()
         sys.exit(0) # user chose Cancel
 
