@@ -140,3 +140,6 @@ Index Data Search Results:
 26.702880859375 
 20.503997802734375
 26.464462280273438
+
+Hash Ranged Search:
+Number of records: 147 in 2576518368.959427 microseconds
