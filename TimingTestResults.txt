@@ -12,6 +12,13 @@ xpgtwhdcsgrcpxymzkpjiwucpzslepibeovbxafshyuyvukwgzipxctmdnzhcjljaikzirrrpnqnhcjq
 uxqocyadklxnsffcnjijzjieujlyeiyafopjormycjnvqvzeejnfuykojxonfmqmchvqyiqcrgzibymfjbkdzwtjuhyzvqmzxhpxri
 oaxihqqaaxuxiqwspzxndxovaieqnprdrqlziebibvimngedfbsibifdqjvdbojseutpaxxcsfqglultvfdypjbfuxkxltssqnhqkeudmklzeyucfyaujebf
 
+Ranges:
+aa - ab
+cc - cd
+mm - mn
+pp - pq
+ww - wx
+
 BTREE Data Search Results:
 Data input: 
 eyxaycmkjjnbbulxuaxgpovdkcjytndxndylfkyrvnuxhgweitmxjjawlmufbacodabknbdkoyjwgfcobolkyogjcdoddttivwuiyytmyekgk 
@@ -48,5 +55,79 @@ azuxydoenwnupuvimhtvojqwaogcbubdwyauboarnoleiimwshrirhfrxlwyhxbdxbazsashqfl
 Number of records retrieved: 1 
 Time: 44592116.11747742 microseconds.
 
+BTREE Key Search Results:
+
+Key input: 
+qtenosaqbdgkbayuioxktshcnnqxzwbrrhefzfwcieomemgobfyuaiynvpmunqnexsmzzi 
+Data value found: 
+hoqvtcehfliblqaanrnkgfxkcpwbogfyvvvqzbzfnhgyzgzpzozftwqxoozcxgcubykcbjhotqnuyojyeidxhvuvmvzjbcdecnhdyqurghmfxvfbgianeuiqsjbvlga 
+Number of records retrieved: 1 
+Time: 3.6954879760742188 microseconds.
+
+Key input: 
+awrybwyakqnrhgypnfbhukxiuzaafnlhjdfkbflnvaecgeutkxcehaoezpggcrnnwvxzakmwlsatzunjspp 
+Data value found: 
+rdfsulaydqlbllblvpjikmcjiruaijeaojulvvlalzdykglhwvqijsrrjlurwytkjoxgljiyimwushbqeranjrhueboabhlkxkrktzidnexgozyuqzkcsrwxu 
+Number of records retrieved: 1 
+Time: 3.5762786865234375 microseconds.
+
+Key input: 
+cddbrxhhjznptzhtgpfldizejaxuwxpenuietrlcqaumbbfirmvwuubfuacsyrzlnjrgcekteeffgmpzbkxxhyddb 
+Data value found: 
+wzyxmlgdtihddniksqxipyumvbnafohbpfabsiglqnpwazgupfeefzsbahdfvlimsinlstwlinhkmphbvlhakcdnjhshudtmnjxgcwrnjazypgzksjl 
+Number of records retrieved: 1 
+Time: 3.4809112548828125 microseconds.
+
+Key input: 
+nznnzgzqdvpdbagwfxsvyvtxhrzgmaoczcpakqspnhuphalpzfmxcgxkxwslygnakeawvtmkcgbmjobiupiwvfisdagcjtevyesvxgfcohozvrirgsqc 
+Data value found: 
+ywazeeiyifypzvmfaqwjexhvfaexqiwpezqjdajofhdfcrmeikqoizmpbqnsyljekzpqbyeghhnlacs 
+Number of records retrieved: 1 
+Time: 3.5762786865234375 microseconds.
+
+Key input: 
+lqejjgamyfnnzyazgihjscgsygxzpgjazpjixluxskktkltqtcznhiifqhefnphmg 
+Data value found: 
+uferdzdnsnanewsflzpvgfcmmseueknbqtutuzipmleshwauxpqdvsshkwdrisuyoqtipezdp 
+Number of records retrieved: 1 
+Time: 10.514259338378906 microseconds.
+
+BTREE Range Search Results:
+
+Data input: 
+Lower Bound: aa 
+Upper Bound: ab 
+Number of records retrieved: 147 
+Time: 88.00029754638672 microseconds
+
+Data input: 
+Lower Bound: cc 
+Upper Bound: cd 
+Number of records retrieved: 160 
+Time: 94.17533874511719 microseconds 
+
+Data input: 
+Lower Bound: mm 
+Upper Bound: mn 
+Number of records retrieved: 163 
+Time: 154.04224395751953 microseconds
+
+Data input: 
+Lower Bound: pp 
+Upper Bound: pq 
+Number of records retrieved: 141 
+Time: 76.91383361816406 microseconds
+
+Data input: 
+Lower Bound: ww 
+Upper Bound: wx 
+Number of records retrieved: 152 
+Time: 151.32427215576172 microseconds 
+
 HASH Data Search Results:
+Time: 36659889.5072937 microseconds.
+Time: 126542845.01075745 microseconds.
+Time: 143191752.6960373 microseconds.
+Time: 108662904.21485901 microseconds
+Time: 31179886.317253113 microseconds.
 
