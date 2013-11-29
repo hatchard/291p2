@@ -14,7 +14,7 @@ lib = cdll.LoadLibrary('./libfoo.so')
 # Not sure if it needs to be in this directory,
 # Just went with the example for now
 DB_FILE = "/tmp/my_db/sample_db"
-DB_SIZE = 3  # Change to 100000 later
+DB_SIZE = 100  # Change to 100000 later
 SEED = 10000000
 database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
@@ -38,12 +38,11 @@ def GuiCreateDatabase():
         # Create a database based on type 
         DATABASE = db.DB()
         print ("Database doesn't exist. Creating a new one.")
-        if "btree" in type:
+        if "BTREE" in type or "btree" in type:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
             print("btree database created")
             eg.msgbox("Btree database created.")
-
-        elif "hash" in type:
+        elif "HASH" in type or "hash" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
             eg.msgbox("Hashtable database created.")
         else:
@@ -114,8 +113,6 @@ def GuiRetrieveWithKey():
     
     # Results found
     if (data):
-        # Open answers file.
-        answers = open('answers','w')
         # Get the data portion of the <key,data> pair
         strdata = data[1]
         # Convert from bytes to a string.
@@ -223,8 +220,61 @@ def GuiRetrieveWithRange():
         eg.msgbox("Error! Upper bound must be larger than lower bound.")
         return
 
-    # Gui is done, but now queries.
-    pass
+    # >>> TESTING <<<<
+    """ 
+    lowerKey = Testing(1)
+    upperKey = Testing(1)
+    while upperKey <= lowerKey:
+        upperKey = Testing(1)
+        lowerkey = Testing(1)
+    """ 
+
+    print(lowerKey)
+    print(upperKey)
+    
+    time_before = time.time()
+    # Get the next key that is greater than lowerKey or equal to it.
+    # cur.set_range returns the key,data pair. Key is at 0th index.
+    tempPair = (cur.set_range(lowerKey.encode('utf-8')))
+    print("tempPair: ", tempPair)
+    # Check if there are no results
+    if (tempPair == None):
+        time_after = time.time()
+        # Get the runtime in microseconds
+        runtime = (time_after - time_before) * 100000
+        text = ("No results found in the following range: \nLower Bound: {}  \nUpper Bound: {} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(lowerKey, upperKey, runtime))
+    else:
+        tempKey = tempPair[0]
+        tempData = tempPair[1]
+        tempKey = tempKey.decode('utf-8')
+        tempData = tempData.decode('utf-8')
+        # Create a list to hold all keys found by range search
+        rangeResults = [(tempKey, tempData)]
+        # Continue getting keys until 1 is larger than the upperKey.
+        while tempKey <= upperKey:
+            # Append to answers file.
+            answers.write(tempKey)
+            answers.write('\n')
+            answers.write(tempData)
+            answers.write('\n')
+            answers.write('\n')
+            # Get the next pair.
+            tempPair = (cur.next())
+            tempKey = tempPair[0]
+            tempData = tempPair[1]
+            tempKey = tempKey.decode('utf-8')
+            tempData = tempData.decode('utf-8')
+            rangeResults.append((tempKey, tempData))
+        time_after = time.time()
+        # Get the runtime in microseconds
+        runtime = (time_after - time_before) * 100000
+        numResults = len(rangeResults)
+        text = ("Data input: \nLower Bound: {} \nUpper Bound: {} \nNumber of records retrieved: {} \nTime: {} microseconds \nRecords found: \n{}".format(lowerKey, upperKey, numResults, runtime, rangeResults))
+
+    msg = "Results:" 
+    title = "Retrieve With Data"
+    eg.textbox(msg, title, text)
+    return 
 
 def GuiDestroyDatabase():
     """
@@ -289,6 +339,8 @@ except:
 
 
 while True:
+    # Open answers file.
+    answers = open('answers','w')
     msg = "CMPUT 291 Project 2, by Victoria Bobey, Sarah Morris, and Eldon Lake"
     title = "mydbtest"
     choices = ["Create and populate the database",
