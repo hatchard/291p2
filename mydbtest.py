@@ -14,7 +14,7 @@ lib = cdll.LoadLibrary('./libfoo.so')
 # Not sure if it needs to be in this directory,
 # Just went with the example for now
 DB_FILE = "/tmp/my_db/sample_db"
-DB_SIZE = 100  # Change to 100000 later
+DB_SIZE = 100000  # Change to 100000 later
 SEED = 10000000
 database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
@@ -141,8 +141,12 @@ def GuiCreateDatabase():
                 SEC_DB.put(value, key)
             DATABASE.put(key,value)
         index = index + 1
-
-    SEC_DB.close()
+   
+    eg.msgbox("Hashtable database created.")
+    
+    if "indexfile" in type:
+        SEC_DB.close()
+    print("len: ", len(DATABASE))
     DATABASE.close()
     return
 
