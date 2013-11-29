@@ -32,9 +32,6 @@ def GuiIndexData():
         eg.msgbox("Operation cancelled.")
         return
 
-    # >>> TESTING <<<
-    #searchdata = Testing(2)
-
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
 
@@ -151,8 +148,8 @@ def GuiRetrieveWithKey():
         return
         
     # >>>> Enable the following 2 lines for testing: <<<<<<
-    searchkey = Testing(1)
-    print (searchkey)
+    # searchkey = Testing(1)
+    # print (searchkey)
     
     # Change the key from string to bytes:
     bytes_key = searchkey.encode('utf-8')
@@ -258,8 +255,6 @@ def GuiRetrieveWithData():
         eg.msgbox("Operation cancelled.")
         return
 
-    # >>>>> TESTING <<<<
-    #searchdata = Testing(2)
 
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
@@ -328,14 +323,6 @@ def GuiRetrieveWithRange():
     if upperKey <= lowerKey:
         eg.msgbox("Error! Upper bound must be larger than lower bound.")
         return
-
-    # >>> TESTING <<<<   
-    #lowerKey = Testing(1)
-    #upperKey = Testing(1)
-    #while upperKey <= lowerKey:
-    #    upperKey = Testing(1)
-    #    lowerkey = Testing(1)
-    
 
     print("Lower Key: ",lowerKey)
     print("Upper Key: ",upperKey)

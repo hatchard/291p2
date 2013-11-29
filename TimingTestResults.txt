@@ -125,8 +125,15 @@ Number of records retrieved: 152
 Time: 151.32427215576172 microseconds 
 
 HASH Data Search Results:
-Time: 36659889.5072937 microseconds.
-Time: 126542845.01075745 microseconds.
-Time: 143191752.6960373 microseconds.
-Time: 108662904.21485901 microseconds
-Time: 31179886.317253113 microseconds.
+Time: 366598895.072937 microseconds.
+Time: 1265428450.1075745 microseconds.
+Time: 1431917526.960373 microseconds.
+Time: 1086629042.1485901 microseconds.
+Time: 311798863.17253113 microseconds.
+
+Index Data Search Results:
+25.272369384765625 
+22.172927856445312
+26.702880859375 
+20.503997802734375
+26.464462280273438
