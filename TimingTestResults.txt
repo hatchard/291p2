@@ -131,6 +131,9 @@ Time: 1431917526.960373 microseconds.
 Time: 1086629042.1485901 microseconds.
 Time: 311798863.17253113 microseconds.
 
+HASH Range Search Results:
+Time: 157585918.49803925 microseconds.
+
 Index Data Search Results:
 25.272369384765625 
 22.172927856445312
