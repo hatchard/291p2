@@ -93,7 +93,7 @@ def GuiCreateDatabase():
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
             if "indexfile" in type:
                 SEC_DB = db.DB()
-                SEC_DB.open("indexfile", None, db.DB_BTREE, db.DB_CREATE)
+                SEC_DB.open("IndexFile", None, db.DB_BTREE, db.DB_CREATE)
                 eg.msgbox("Indexed Database created.")
             else:
                 print("btree database created")
@@ -303,9 +303,9 @@ def GuiRetrieveWithData():
         # Convert from bytes to a string.
         key = key.decode('utf-8')
         # Append to answers file.
-        answers.write(searchdata)
-        answers.write('\n')
         answers.write(key)
+        answers.write('\n')
+        answers.write(searchdata)
         answers.write('\n')
         answers.write('\n')
         text = ("Data input: \n{} \nKey value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(searchdata, key, runtime))
@@ -402,11 +402,16 @@ def GuiDestroyDatabase():
     """
     # Close the existing database handle.
     DATABASE.close()
-
+    try:
+        SEC_DB.close()
+    except:
+        pass
     # Open a new database handle and drop the database.
     db_destroy = db.DB()
+    if "indexfile" in sys.argv: sec_destroy = db.DB()
     try:
         db_destroy.remove("sample_db")
+        if "indexfile" in sys.argv: sec_destroy.remove("IndexFile")
         eg.msgbox("Database was successfully dropped.")
         db_destroy.close()
     except Exception as e:
@@ -459,7 +464,7 @@ except:
 
 try:
     SEC_DB = db.DB()
-    SEC_DB.open("indexfile")
+    SEC_DB.open("IndexFile")
     sec_cur = SEC_DB.cursor()
 except:
     pass
@@ -473,10 +478,9 @@ while True:
     choices = ["Create and populate the database",
                "Retrieve records with a given key",
                "Retrieve records with a given data",
-               "Retrieve records wtih a given range of key values",
+               "Retrieve records with a given range of key values",
                "Destroy the database",
-               "Grab a random key for testing",
-               "Index data search"]
+               "Grab a random key for testing"]
     choice = eg.choicebox(msg, title, choices)
     if choice == choices[0]:
         if not database_exists:
@@ -487,7 +491,7 @@ while True:
             cur = DATABASE.cursor()
             if "indexfile" in sys.argv:
                 SEC_DB = db.DB()
-                SEC_DB.open("indexfile")
+                SEC_DB.open("IndexFile")
                 sec_cur = SEC_DB.cursor()
             database_exists = True
         else:
@@ -499,7 +503,10 @@ while True:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[2]:
         if database_exists:
-            GuiRetrieveWithData()
+            if "indexfile" in sys.argv:
+                GuiIndexData()
+            else:
+                GuiRetrieveWithData()
         else:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[3]:
@@ -518,8 +525,6 @@ while True:
             eg.msgbox("Error! Must create database first.")
     elif choice == choices[5]:
         eg.textbox("Key: ", "Random Key", Testing(1))
-    elif choice == choices[6]:
-        GuiIndexData()
 
     msg = "Do you want to continue?"
     title = "Continue?"
