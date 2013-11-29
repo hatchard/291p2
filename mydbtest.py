@@ -33,7 +33,7 @@ def GuiIndexData():
         return
 
     # >>> TESTING <<<
-    searchdata = Testing(2)
+    # searchdata = Testing(2)
 
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
@@ -259,7 +259,7 @@ def GuiRetrieveWithData():
         return
 
     # >>>>> TESTING <<<<
-    searchdata = Testing(2)
+    # searchdata = Testing(2)
 
 
     # Change the data from string to bytes:
@@ -331,13 +331,13 @@ def GuiRetrieveWithRange():
         return
 
     # >>> TESTING <<<<
-     
+    """ 
     lowerKey = Testing(1)
     upperKey = Testing(1)
     while upperKey <= lowerKey:
         upperKey = Testing(1)
         lowerkey = Testing(1)
-    
+    """
 
     print("Lower Key: ",lowerKey)
     print("Upper Key: ",upperKey)
