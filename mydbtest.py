@@ -82,6 +82,7 @@ def GuiCreateDatabase():
             DATABASE.put(key,value)
         index = index + 1
   
+    print("len database: ", len(DATABASE))
     # Create a cursor
     return DATABASE.cursor()
 
@@ -227,7 +228,7 @@ def GuiRetrieveWithRange():
     while upperKey <= lowerKey:
         upperKey = Testing(1)
         lowerkey = Testing(1)
-    """ 
+    """
 
     print(lowerKey)
     print(upperKey)
@@ -352,9 +353,7 @@ while True:
     if choice == choices[0]:
         if not database_exists:
             cur = GuiCreateDatabase()
-            print("len database: ", len(DATABASE))
             database_exists = True
-            print("len database: ", len(DATABASE))
         else:
             eg.msgbox("Database already exists. Destroy the old database before attempting to create a new one.")
     elif choice == choices[1]:
