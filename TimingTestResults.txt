@@ -47,3 +47,10 @@ Key value found:
 azuxydoenwnupuvimhtvojqwaogcbubdwyauboarnoleiimwshrirhfrxlwyhxbdxbazsashqfl 
 Number of records retrieved: 1 
 Time: 44592116.11747742 microseconds.
+
+HASH Data Search Results:
+Time: 36659889.5072937 microseconds.
+Time: 126542845.01075745 microseconds.
+Time: 143191752.6960373 microseconds.
+Time: 108662904.21485901 microseconds 
+Time: 31179886.317253113 microseconds.
