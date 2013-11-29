@@ -14,7 +14,7 @@ lib = cdll.LoadLibrary('./libfoo.so')
 # Not sure if it needs to be in this directory,
 # Just went with the example for now
 DB_FILE = "/tmp/my_db/sample_db"
-DB_SIZE = 100000  # Change to 100000 later
+DB_SIZE = 100000
 SEED = 10000000
 database_exists = False # bool does database already exist
 cur = None # cursor must be accessible by all functions
@@ -31,6 +31,9 @@ def GuiIndexData():
     if searchdata == None:
         eg.msgbox("Operation cancelled.")
         return
+
+    # >>> TESTING <<<
+    searchdata = Testing(2)
 
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
@@ -82,15 +85,15 @@ def GuiCreateDatabase():
             if "indexfile" in type:
                 SEC_DB = db.DB()
                 SEC_DB.open("IndexFile", None, db.DB_BTREE, db.DB_CREATE)
-                eg.msgbox("Indexed Database created.")
+                eg.msgbox("Creating Indexed Database. Please wait.")
             else:
                 print("btree database created")
-                eg.msgbox("Btree database created.")
+                eg.msgbox("Creating Btree Database. Please wait.")
         elif "HASH" in type or "hash" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
-            eg.msgbox("Hashtable database created.")
+            eg.msgbox("Creating Hash Table Database. Please wait.")
         else:
-            eg.msgbox("Invalid type on execution, format should be python3 mydbtest.py BTREE/HASH")
+            eg.msgbox("Invalid type on execution, format should be ./mydbtest.py btree or hash or indexfile")
             return
 
     # This is taken from python example shown in lab, with changes for python3
@@ -132,7 +135,7 @@ def GuiCreateDatabase():
    
     if "indexfile" in type:
         SEC_DB.close()
-    print("len: ", len(DATABASE))
+    print("Length of Database: ", len(DATABASE))
     DATABASE.close()
     return
 
@@ -148,8 +151,8 @@ def GuiRetrieveWithKey():
         return
         
     # >>>> Enable the following 2 lines for testing: <<<<<<
-    #searchkey = Testing(1)
-    #print (searchkey)
+    searchkey = Testing(1)
+    print (searchkey)
     
     # Change the key from string to bytes:
     bytes_key = searchkey.encode('utf-8')
@@ -255,6 +258,10 @@ def GuiRetrieveWithData():
         eg.msgbox("Operation cancelled.")
         return
 
+    # >>>>> TESTING <<<<
+    searchdata = Testing(2)
+
+
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
 
@@ -267,6 +274,7 @@ def GuiRetrieveWithData():
     while data != bytes_data and i < len(DATABASE):
         next_record = cur.next()
         data = next_record[1]
+
         i += 1
 
     if data == bytes_data:
@@ -323,16 +331,16 @@ def GuiRetrieveWithRange():
         return
 
     # >>> TESTING <<<<
-    """ 
+     
     lowerKey = Testing(1)
     upperKey = Testing(1)
     while upperKey <= lowerKey:
         upperKey = Testing(1)
         lowerkey = Testing(1)
-    """
+    
 
-    print(lowerKey)
-    print(upperKey)
+    print("Lower Key: ",lowerKey)
+    print("Upper Key: ",upperKey)
     
     time_before = time.time()
     # Get the next key that is greater than lowerKey or equal to it.
@@ -452,10 +460,10 @@ try:
 except:
     pass
 
+# Open answers file.
+answers = open('answers','w')
 
 while True:
-    # Open answers file.
-    answers = open('answers','w')
     msg = "CMPUT 291 Project 2, by Victoria Bobey, Sarah Morris, and Eldon Lake"
     title = "mydbtest"
     choices = ["Create and populate the database",
@@ -514,6 +522,7 @@ while True:
     if eg.ccbox(msg, title, ('Continue', 'Exit')): # Continue/Cancel dialog
         pass # user chose Continue
     else:
+        answers.close()
         GuiDestroyDatabase()
         sys.exit(0) # user chose Cancel
 
