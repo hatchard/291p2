@@ -59,11 +59,6 @@ def GuiIndexData():
     title = "Retrieve With Data"
     eg.textbox(msg, title, text)
 
-def CreateSecIndex(SEC_DATABASE, key, data, new_key):
-    new_key = data
-    print(new_key)
-    return
-
 def GuiCreateDatabase():
     """
     Creates and populates the database
