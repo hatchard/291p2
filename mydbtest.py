@@ -135,8 +135,6 @@ def GuiCreateDatabase():
             DATABASE.put(key,value)
         index = index + 1
    
-    eg.msgbox("Hashtable database created.")
-    
     if "indexfile" in type:
         SEC_DB.close()
     print("len: ", len(DATABASE))
@@ -229,6 +227,7 @@ def GuiHashRange():
             resultlist.append((current[0], current[1]))
         current = cur.next()
         i += 1
+
     time_after = time.time()
     # Get time in microseconds
     runtime = (time_after - time_before) * 100000
@@ -266,22 +265,15 @@ def GuiRetrieveWithData():
 
     time_before = time.time()
     
-    #print("data looking for: ", bytes_data)
-    
     first = cur.first()
-
     data = first[1]
-
-    #print("first data: ", data)
-    #print("len database: ", len(DATABASE))
 
     i = 1 
     while data != bytes_data and i < len(DATABASE):
         next_record = cur.next()
         data = next_record[1]
-        #print("data: ", data)
+        print("i: ", i)
         i += 1
-        #print("i: ", i)
 
     if data == bytes_data:
         key = next_record[0]

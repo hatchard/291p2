@@ -1,0 +1,3 @@
+chmod +x mydbtest
+python3 mydbtest.py $1
+
