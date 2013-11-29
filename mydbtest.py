@@ -35,14 +35,15 @@ def GuiCreateDatabase():
         # Database should not exist, if you hit this something is wrong
         eg.msgbox("Reaching this box should be impossible")
     except:
-        DATABASE = db.DB()
         # Create a database based on type 
+        DATABASE = db.DB()
         print ("Database doesn't exist. Creating a new one.")
-        if "BTREE" in type:
+        if "btree" in type:
             DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
+            print("btree database created")
             eg.msgbox("Btree database created.")
 
-        elif "HASH" in type:
+        elif "hash" in type:
             DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
             eg.msgbox("Hashtable database created.")
         else:
@@ -81,8 +82,7 @@ def GuiCreateDatabase():
                 key = key.encode('utf-8')
             DATABASE.put(key,value)
         index = index + 1
-        
-
+  
     # Create a cursor
     return DATABASE.cursor()
 
@@ -151,40 +151,48 @@ def GuiRetrieveWithData():
     # Change the data from string to bytes:
     bytes_data = searchdata.encode('utf-8')
 
-    SEC_INDEX = db.DB()
-    DATABASE.associate(SEC_INDEX, CreateSecIndex)
-
-    sec_cur = SEC_INDEX.cursor
-
     time_before = time.time()
-    key = sec_cur.set(bytes_data)
-    """
-    This is where you would put the query to time it.
-    You don't want key = cur.set() because that is for getting the data value
-    associated with the given key.
-    This is saying the key = bytes_data. Now find this key and return the data
-    value associated with it.
-    """
+    
+    print("data looking for: ", bytes_data)
+    
+    first = cur.first()
+
+    data = first[1]
+
+    print("first data: ", data)
+    print("len database: ", len(DATABASE))
+
+    i = 1 
+    while data != bytes_data and i < len(DATABASE):
+        next_record = cur.next()
+        data = next_record[1]
+        print("data: ", data)
+        i += 1
+        print("i: ", i)
+
+    if data == bytes_data:
+        key = next_record[0]
+    else: 
+        key = 0
+    
     time_after = time.time()
 
     # Get time in microseconds
     runtime = (time_after - time_before) * 100000
 
     # Results found
-    if (data):
+    if (key):
         # Open answers file.
         answers = open('answers','a')
-        # Get the data portion of the <key,data> pair
-        strdata = key[1]
         # Convert from bytes to a string.
-        strkey = strkey.decode('utf-8')
+        key = key.decode('utf-8')
         # Append to answers file.
         answers.write(searchdata)
         answers.write('\n')
-        answers.write(strkey)
+        answers.write(key)
         answers.write('\n')
         answers.write('\n')
-        text = ("Data input: \n{} \nKey value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(searchdata, strkey, runtime))
+        text = ("Data input: \n{} \nKey value found: \n{} \nNumber of records retrieved: 1 \nTime: {} microseconds.".format(searchdata, key, runtime))
     # No results
     else:
         text = ("No results found for the following data: \n{} \nNumber of records retrieved: 0 \nTime: {} microseconds".format(searchdata, runtime))
@@ -193,10 +201,6 @@ def GuiRetrieveWithData():
     title = "Retrieve With Data"
     eg.textbox(msg, title, text)
 
-def CreateSecIndex(SEC_DATABASE, key, data, new_key):
-    new_key = data
-    print(new_key)
-    return
 
 def GuiRetrieveWithRange():
     """
@@ -296,7 +300,9 @@ while True:
     if choice == choices[0]:
         if not database_exists:
             cur = GuiCreateDatabase()
+            print("len database: ", len(DATABASE))
             database_exists = True
+            print("len database: ", len(DATABASE))
         else:
             eg.msgbox("Database already exists. Destroy the old database before attempting to create a new one.")
     elif choice == choices[1]:
