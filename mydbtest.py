@@ -13,8 +13,8 @@ lib = cdll.LoadLibrary('./libfoo.so')
 
 # Not sure if it needs to be in this directory,
 # Just went with the example for now
-DB_FILE = "/tmp/elake/sample_db"
-SDB_FILE = "/tmp/elake/IndexFile"
+DB_FILE = "/tmp/elake_db/sample_db"
+SDB_FILE = "/tmp/elake_db/IndexFile"
 DB_SIZE = 100000
 SEED = 10000000
 database_exists = False # bool does database already exist
