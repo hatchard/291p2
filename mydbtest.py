@@ -13,7 +13,8 @@ lib = cdll.LoadLibrary('./libfoo.so')
 
 # Not sure if it needs to be in this directory,
 # Just went with the example for now
-DB_FILE = "/tmp/my_db/sample_db"
+DB_FILE = "/tmp/elake/sample_db"
+SDB_FILE = "/tmp/elake/IndexFile"
 DB_SIZE = 100000
 SEED = 10000000
 database_exists = False # bool does database already exist
@@ -70,7 +71,7 @@ def GuiCreateDatabase():
     try:
         print ("Opening existing database.")
         DATABASE = db.DB()
-        DATABASE.open("sample_db")
+        DATABASE.open(DB_FILE)
         # Database should not exist, if you hit this something is wrong
         eg.msgbox("Reaching this box should be impossible")
     except:
@@ -78,16 +79,16 @@ def GuiCreateDatabase():
         DATABASE = db.DB()
         print ("Database doesn't exist. Creating a new one.")
         if "BTREE" in type or "btree" in type or "indexfile" in type:
-            DATABASE.open("sample_db", None, db.DB_BTREE, db.DB_CREATE)
-            if "indexfile" in type:
+            DATABASE.open(DB_FILE, None, db.DB_BTREE, db.DB_CREATE)
+            if "indexfile" in type or "IndexFile" in type:
                 SEC_DB = db.DB()
-                SEC_DB.open("IndexFile", None, db.DB_BTREE, db.DB_CREATE)
+                SEC_DB.open(SDB_FILE, None, db.DB_BTREE, db.DB_CREATE)
                 eg.msgbox("Creating Indexed Database. Please wait.")
             else:
                 print("btree database created")
                 eg.msgbox("Creating Btree Database. Please wait.")
         elif "HASH" in type or "hash" in type:
-            DATABASE.open("sample_db", None, db.DB_HASH, db.DB_CREATE)
+            DATABASE.open(DB_FILE, None, db.DB_HASH, db.DB_CREATE)
             eg.msgbox("Creating Hash Table Database. Please wait.")
         else:
             eg.msgbox("Invalid type on execution, format should be ./mydbtest.py btree or hash or indexfile")
@@ -386,8 +387,8 @@ def GuiDestroyDatabase():
     db_destroy = db.DB()
     if "indexfile" in sys.argv: sec_destroy = db.DB()
     try:
-        db_destroy.remove("sample_db")
-        if "indexfile" in sys.argv: sec_destroy.remove("IndexFile")
+        db_destroy.remove(DB_FILE)
+        if "indexfile" in sys.argv: sec_destroy.remove(SDB_FILE)
         eg.msgbox("Database was successfully dropped.")
         db_destroy.close()
     except Exception as e:
@@ -430,7 +431,7 @@ def Testing(val_type):
 
 try:
     DATABASE = db.DB()
-    DATABASE.open("sample_db")
+    DATABASE.open(DB_FILE)
     eg.msgbox("Existing database found, opening existing database")
     database_exists = True
     cur = DATABASE.cursor()
@@ -440,7 +441,7 @@ except:
 
 try:
     SEC_DB = db.DB()
-    SEC_DB.open("IndexFile")
+    SEC_DB.open(SDB_FILE)
     sec_cur = SEC_DB.cursor()
 except:
     pass
@@ -463,11 +464,11 @@ while True:
             GuiCreateDatabase()
             # These lines moved here because python scoping was misbehaving
             DATABASE = db.DB()
-            DATABASE.open("sample_db")
+            DATABASE.open(DB_FILE)
             cur = DATABASE.cursor()
             if "indexfile" in sys.argv:
                 SEC_DB = db.DB()
-                SEC_DB.open("IndexFile")
+                SEC_DB.open(SDB_FILE)
                 sec_cur = SEC_DB.cursor()
             database_exists = True
         else:
